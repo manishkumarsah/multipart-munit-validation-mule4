@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="multipart-munit-validation-mule4-test-suite.xml" />
+	<munit:test name="multipart-munit-validation-mule4-test-suite-multipart-munit-validation-mule4FlowTest" doc:id="979d9728-797f-4f34-b7ba-10bc9f3e9943" description="Test">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="60e5845a-8f95-42aa-9269-23baa1899041" />
+			<flow-ref doc:name="Flow-ref to multipart-munit-validation-mule4Flow" doc:id="a69e6d67-710a-47df-ace2-78386049ff05" name="multipart-munit-validation-mule4Flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that payload size" doc:id="12002cd1-2360-4c21-947b-9f02f5011fe6" expression="#[%dw 2.0 output application/java input payload multipart/form-data --- sizeOf(payload.parts)]" is="#[MunitTools::equalTo(1)]"/>
+			<munit-tools:assert-that doc:name="Assert that name is correct" doc:id="a965a03a-a02f-4474-ba73-8af59a8dd148" expression="#[%dw 2.0 output application/java input payload multipart/form-data --- payload.parts.clients.content.clients.client.name]" is='#[MunitTools::equalTo("Manish")]' />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

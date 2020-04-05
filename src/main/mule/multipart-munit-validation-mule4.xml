@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e006068c-fe41-41fc-b3f7-4422380efd2e" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="multipart-munit-validation-mule4Flow" doc:id="bfaab702-26ed-4a6a-897f-e8528d72d07a" >
+		<http:listener doc:name="Listener" doc:id="f83b2677-a3f2-413f-b046-9d21fcf5deb8" config-ref="HTTP_Listener_config" path="/multipart-fields"/>
+		<logger level="INFO" doc:name="Logger" doc:id="57f1f134-fd27-453b-8e9d-0a0e2a7dfcf2" />
+		<ee:transform doc:name="multipart-fields" doc:id="4f91661c-642e-4ba9-a2ec-4088ef5cc9c4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import dw::module::Multipart
+output multipart/form-data
+
+var myClients = {
+  clients: {
+    client: {
+      id: 1,
+      name: "Manish"
+    }
+  }
+}
+---
+{
+  parts: {
+    clients: Multipart::field({name:"clients", value: myClients, mime: "application/xml"})
+  }
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="91c14301-d11b-4827-b279-c4d3da11307c" />
+	</flow>
+</mule>
